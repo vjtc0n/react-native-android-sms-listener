@@ -1,4 +1,4 @@
 /* @flow */
 export type CancellableSubscription = {
-  remove(): void;
+    remove(): void;
 };

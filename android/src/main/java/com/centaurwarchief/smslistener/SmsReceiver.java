@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
 import android.util.Log;
-
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
@@ -28,26 +27,22 @@ public class SmsReceiver extends BroadcastReceiver {
 
     private void receiveMessage(SmsMessage message) {
         if (mContext == null) {
+            Log.d(SmsListenerPackage.TAG, "NO CONTEXT");
             return;
         }
 
-        if (! mContext.hasActiveCatalystInstance()) {
+        if (!mContext.hasActiveCatalystInstance()) {
+            Log.d(SmsListenerPackage.TAG, "hasActiveCatalystInstance = false!");
             return;
         }
 
-        Log.d(
-            SmsListenerPackage.TAG,
-            String.format("%s: %s", message.getOriginatingAddress(), message.getMessageBody())
-        );
+        Log.d(SmsListenerPackage.TAG, "IT'S OK, message received");
 
         WritableNativeMap receivedMessage = new WritableNativeMap();
 
         receivedMessage.putString("originatingAddress", message.getOriginatingAddress());
         receivedMessage.putString("body", message.getMessageBody());
-
-        mContext
-            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-            .emit(EVENT, receivedMessage);
+        mContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(EVENT, receivedMessage);
     }
 
     @Override
@@ -63,7 +58,7 @@ public class SmsReceiver extends BroadcastReceiver {
         try {
             final Bundle bundle = intent.getExtras();
 
-            if (bundle == null || ! bundle.containsKey("pdus")) {
+            if (bundle == null || !bundle.containsKey("pdus")) {
                 return;
             }
 
